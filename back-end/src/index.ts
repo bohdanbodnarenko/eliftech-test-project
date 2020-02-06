@@ -1,3 +1,3 @@
 import { startServer } from './startServer';
 
-startServer().then(() => {});
+startServer().then();

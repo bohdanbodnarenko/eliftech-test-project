@@ -4,6 +4,7 @@ import * as cors from 'cors';
 import * as bodyParser from 'body-parser';
 
 import { createMongoConnection } from './utils';
+import { orderRoutes } from './routes';
 
 export const startServer = async (): Promise<express.Express> => {
     const app = express();
@@ -14,6 +15,8 @@ export const startServer = async (): Promise<express.Express> => {
     await createMongoConnection(
         process.env.NODE_ENV === 'test' ? process.env.MONGO_URI_TEST : process.env.MONGO_URI_DEVELOPMENT,
     );
+
+    app.use('/order', orderRoutes);
 
     const port = process.env.EXPRESS_PORT || 4000;
 
