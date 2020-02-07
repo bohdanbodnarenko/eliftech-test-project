@@ -1,49 +1,44 @@
-import * as fs from 'fs';
 import { Request, Response } from 'express';
-import { IncomingForm } from 'formidable';
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
-import { parse } from 'fast-csv';
 
-import { Order, OrderInterface } from '../models';
+import { Order, OrderProperties } from '../models';
 import { validOrdersArray } from '../utils/validations/validOrderSchema';
 import { formatYupError } from '../utils/formatYupError';
 import getRowsFromCsv from '../utils/getRowsFromCsv';
+import { getFilesFromReq } from '../utils/getFilesFromReq';
 
 export const getOrders = async (req: Request, res: Response): Promise<Response> => {
     const { limit, offset, sortBy } = req.query;
 
     const orders = await Order.find()
         .sort(sortBy || '')
-        .skip(offset || 0)
-        .limit(limit || 50);
-    console.log(orders);
+        .skip(+offset || 0)
+        .limit(+limit || 50);
     return res.json(orders);
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
 export const uploadOrdersByCsv = async (req: Request, res: Response): Promise<Response> => {
-    const form = new IncomingForm();
-    form.keepExtensions = true;
-    form.parse(req, async (err, _, files) => {
-        if (err) {
-            return res.status(400).json({ error: "File can't be uploaded" });
-        }
+    const files = await getFilesFromReq(req);
+    if (files.csv) {
+        const orders = await getRowsFromCsv<OrderProperties>(files.csv.path);
+        try {
+            await validOrdersArray.validate(orders, { abortEarly: false });
 
-        let orders: OrderInterface[] = [];
-
-        if (files.file) {
-            orders = await getRowsFromCsv<OrderInterface>(files.file.path);
             try {
-                await validOrdersArray.validate(orders, { abortEarly: false });
-                return res.json(orders);
+                await Order.create(orders, { validateBeforeSave: true });
+                return res.json({ message: `${orders.length} orders created successfully` });
             } catch (e) {
-                return res.status(400).json(formatYupError(e));
+                if (e.code === 11000) {
+                    const { userEmail, date } = e.keyValue;
+                    res.status(400).json({ error: `Order for user ${userEmail} with date ${date} exists already` });
+                } else {
+                    console.error(e);
+                    res.status(500).json({ error: 'Server error, please try again' });
+                }
             }
-        } else {
-            return res.status(400).json({ error: 'Please provide a csv file' });
+        } catch (e) {
+            return res.status(400).json(formatYupError(e));
         }
-    });
-    // return res.status(400).json({ error: 'Bad request' });
+    } else {
+        return res.status(400).json({ error: 'Please provide a csv file' });
+    }
 };

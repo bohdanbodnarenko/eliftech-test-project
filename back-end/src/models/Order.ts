@@ -2,7 +2,7 @@ import { Schema, Document, model } from 'mongoose';
 
 import { validStatuses } from '../utils/validations/validOrderSchema';
 
-export interface OrderInterface extends Document {
+export interface OrderProperties extends Document {
     userEmail: string;
     date: Date;
     value: number;
@@ -36,6 +36,6 @@ const orderSchema = new Schema({
     },
 });
 
-orderSchema.index({ email: 1, date: 1 }, { unique: true });
+orderSchema.index({ userEmail: 1, date: 1 }, { unique: true });
 
-export const Order = model<OrderInterface>('Order', orderSchema);
+export const Order = model('Order', orderSchema);

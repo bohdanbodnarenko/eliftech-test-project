@@ -5,6 +5,7 @@ export const validStatuses = ['approved', 'pending', 'rejected'];
 export const validOrderSchema = yup.object().shape({
     userEmail: yup
         .string()
+        .nullable(false)
         .email('Email is not valid')
         .required(),
     date: yup.date().required(),
