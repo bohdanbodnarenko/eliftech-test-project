@@ -1,6 +1,5 @@
 import * as dotenv from 'dotenv';
 import * as requests from 'supertest';
-import { connection } from 'mongoose';
 
 import { startServer } from '../startServer';
 import { Order } from '../models';
