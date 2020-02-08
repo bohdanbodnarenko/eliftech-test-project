@@ -9,11 +9,24 @@ import { getFilesFromReq } from '../utils/getFilesFromReq';
 export const getOrders = async (req: Request, res: Response): Promise<Response> => {
     const { limit, offset, sortBy, desc } = req.query;
 
-    const orders = await Order.find()
-        .sort([[sortBy || '', desc === 'true' ? -1 : 1]])
-        .skip(+offset || 0)
-        .limit(+limit || 50);
+    let orders;
+    if (sortBy) {
+        orders = await Order.find()
+            .sort([[sortBy, desc === 'true' ? -1 : 1]])
+            .skip(+offset || 0)
+            .limit(+limit || 50);
+    } else {
+        orders = await Order.find()
+            .skip(+offset || 0)
+            .limit(+limit || 50);
+    }
+
     return res.json(orders);
+};
+
+export const getOrdersCount = async (req: Request, res: Response): Promise<Response> => {
+    const totalCount = await Order.count({});
+    return res.json({ totalCount });
 };
 
 export const uploadOrdersByCsv = async (req: Request, res: Response): Promise<Response> => {

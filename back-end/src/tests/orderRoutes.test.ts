@@ -22,7 +22,7 @@ describe('Order routes', () => {
             .set('Accept', 'application/json')
             .expect(200, [], done);
     });
-    it('should return one user', async done => {
+    it('should return one order', async done => {
         await new Order(testOrder).save();
         request
             .get('/order/all')
@@ -37,6 +37,12 @@ describe('Order routes', () => {
                 expect(_.pick(resOrder, Object.keys(testOrder))).toEqual(testOrder);
                 done();
             });
+    });
+    it('should return totalCount === 1', done => {
+        request
+            .get('/order/count')
+            .set('Accept', 'application/json')
+            .expect(200, { totalCount: 1 }, done);
     });
     it('should upload csv file', async done => {
         const rowsCount = (await getRowsFromCsv(pathToTestCsv)).length;
