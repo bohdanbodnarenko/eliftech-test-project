@@ -1,0 +1,4 @@
+// order
+export const SET_SELECTED_ORDERS = "SET_ORDERS";
+export const SET_ORDERS_OFFSET = "SET_ORDERS_OFFSET";
+export const SET_ORDERS_LIMIT = "SET_ORDERS_LIMIT";
