@@ -7,10 +7,10 @@ import getRowsFromCsv from '../utils/getRowsFromCsv';
 import { getFilesFromReq } from '../utils/getFilesFromReq';
 
 export const getOrders = async (req: Request, res: Response): Promise<Response> => {
-    const { limit, offset, sortBy } = req.query;
+    const { limit, offset, sortBy, desc } = req.query;
 
     const orders = await Order.find()
-        .sort(sortBy || '')
+        .sort([[sortBy || '', desc === 'true' ? -1 : 1]])
         .skip(+offset || 0)
         .limit(+limit || 50);
     return res.json(orders);
