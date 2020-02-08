@@ -6,4 +6,5 @@ export interface OrderStore {
   limit: number;
   sortBy: keyof Order;
   isOrdersDesc: boolean;
+  totalCount: number;
 }

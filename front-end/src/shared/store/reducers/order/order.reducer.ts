@@ -8,7 +8,8 @@ const initialState: OrderStore = {
   limit: 50,
   offset: 0,
   sortBy: "userEmail",
-  isOrdersDesc: false
+  isOrdersDesc: false,
+  totalCount: 0
 };
 
 export const order = (state = initialState, action: AnyAction) => {
@@ -41,6 +42,12 @@ export const order = (state = initialState, action: AnyAction) => {
       return {
         ...state,
         isOrdersDesc: action.payload
+      };
+
+    case types.SET_ORDERS_TOTAL_COUNT:
+      return {
+        ...state,
+        totalCount: action.payload
       };
 
     default:

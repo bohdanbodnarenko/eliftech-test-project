@@ -32,3 +32,11 @@ export const setOrderDesc = (isDesc: boolean): AnyAction => ({
   type: types.SET_ORDERS_DESC,
   payload: isDesc
 });
+
+export const getOrdersTotalCount = () => async (dispatch: Dispatch) => {
+  const {
+    data: { totalCount }
+  } = await httpService.get("/order/count");
+
+  return dispatch({ type: types.SET_ORDERS_TOTAL_COUNT, payload: totalCount });
+};

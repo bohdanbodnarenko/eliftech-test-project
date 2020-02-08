@@ -5,6 +5,7 @@ import { Paper, TableContainer } from "@material-ui/core";
 import { AppStore } from "../../shared/store/store";
 import {
   getOrders,
+  getOrdersTotalCount,
   setLimit,
   setOffset,
   setOrderBy,
@@ -18,15 +19,18 @@ const OrderConnector = ({
   offset,
   sortBy,
   isOrdersDesc,
+  totalCount,
   getOrders,
   setLimit,
   setOffset,
   setOrderBy,
-  setOrderDesc
+  setOrderDesc,
+  getTotalCount
 }: any) => {
   useEffect(() => {
+    getTotalCount();
     getOrders();
-  }, [getOrders]);
+  }, [getOrders, getTotalCount]);
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -55,7 +59,7 @@ const OrderConnector = ({
       <OrdersTable
         orders={selectedOrders}
         limit={limit}
-        totalCount={2000}
+        totalCount={totalCount}
         offset={offset}
         orderBy={sortBy}
         isDesc={isOrdersDesc}
@@ -68,13 +72,14 @@ const OrderConnector = ({
 };
 
 const mapStateToProps = ({
-  order: { selectedOrders, limit, offset, sortBy, isOrdersDesc }
+  order: { selectedOrders, limit, offset, sortBy, isOrdersDesc, totalCount }
 }: AppStore) => ({
   selectedOrders,
   limit,
   offset,
   sortBy,
-  isOrdersDesc
+  isOrdersDesc,
+  totalCount
 });
 
 const mpaDispatchToProps = (dispatch: any) => ({
@@ -82,7 +87,8 @@ const mpaDispatchToProps = (dispatch: any) => ({
   setLimit: (limit: number) => dispatch(setLimit(limit)),
   setOffset: (offset: number) => dispatch(setOffset(offset)),
   setOrderBy: (orderBy: string) => dispatch(setOrderBy(orderBy)),
-  setOrderDesc: (isDesc: boolean) => dispatch(setOrderDesc(isDesc))
+  setOrderDesc: (isDesc: boolean) => dispatch(setOrderDesc(isDesc)),
+  getTotalCount: () => dispatch(getOrdersTotalCount())
 });
 
 export default connect(
