@@ -1,4 +1,5 @@
 export interface Order {
+  _id: string;
   userEmail: string;
   date: Date;
   value: number;

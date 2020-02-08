@@ -9,7 +9,7 @@ import { OrderStore } from "./reducers/order/types";
 
 export const history = createBrowserHistory();
 
-export interface Store {
+export interface AppStore {
   order: OrderStore;
 }
 

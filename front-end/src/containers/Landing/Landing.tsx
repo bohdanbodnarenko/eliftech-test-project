@@ -10,7 +10,7 @@ const Landing = (props: RouterProps) => {
       <Button
         variant={"outlined"}
         color={"primary"}
-        onClick={() => props.history.push("/order")}
+        onClick={() => props.history.push("/orders")}
       >
         Go to orders
       </Button>
