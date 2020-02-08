@@ -59,11 +59,6 @@ const OrdersTable = ({
       <Table size={"small"}>
         <TableHead>
           <TableRow>
-            {/*<TableCell align="center">User email</TableCell>*/}
-            {/*<TableCell align="center">Date</TableCell>*/}
-            {/*<TableCell align="center">Value</TableCell>*/}
-            {/*<TableCell align="center">Currency</TableCell>*/}
-            {/*<TableCell align="center">Status</TableCell>*/}
             {headCells.map(headCell => (
               <TableCell key={headCell.id} align={"center"}>
                 <TableSortLabel
