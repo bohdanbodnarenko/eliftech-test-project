@@ -55,3 +55,17 @@ export const uploadOrdersByCsv = async (req: Request, res: Response): Promise<Re
         return res.status(400).json({ error: 'Please provide a csv file' });
     }
 };
+
+export const getStatiscticFile = async (req: Request, res: Response): Promise<Response> => {
+    const result = await Order.aggregate([
+        { $match: { status: 'approved' } },
+        {
+            $group: {
+                _id: { userEmail: '$userEmail', month: { $month: '$date' }, year: { $year: '$date' } },
+                totalAmount: { $sum: '$value' },
+            },
+        },
+    ]);
+    console.log(result);
+    return res.json();
+};
