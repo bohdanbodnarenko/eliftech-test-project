@@ -17,10 +17,11 @@ httpService.interceptors.response.use(
     }
 
     const { error } = response.data;
-    if (!error) {
+    const [err] = response.data;
+    if (!error && !err) {
       return alert("Oops, server error :(");
     }
 
-    return Promise.reject(error);
+    return Promise.reject(error ? error : err);
   }
 );

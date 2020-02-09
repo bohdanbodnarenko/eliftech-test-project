@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import * as stringify from 'csv-stringify';
 
 import { Order, OrderProperties } from '../models';
 import { validOrdersArray } from '../utils/validations/validOrderSchema';
@@ -62,10 +63,20 @@ export const getStatiscticFile = async (req: Request, res: Response): Promise<Re
         {
             $group: {
                 _id: { userEmail: '$userEmail', month: { $month: '$date' }, year: { $year: '$date' } },
-                totalAmount: { $sum: '$value' },
+                amount: { $sum: '$value' },
             },
         },
     ]);
-    console.log(result);
-    return res.json();
+
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', `attachment; filename="amount_per_month_${new Date().toISOString()}.csv"`);
+    return stringify(
+        result.map(({ _id: { userEmail, month, year }, amount }) => ({
+            // eslint-disable-next-line @typescript-eslint/camelcase
+            user_email: userEmail,
+            date: `${new Date(month).toLocaleString('default', { month: 'long' })} ${year}`,
+            amount,
+        })),
+        { header: true, delimiter: '|' },
+    ).pipe(res);
 };

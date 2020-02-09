@@ -51,7 +51,14 @@ const OrderConnector = ({
         });
         alert(message);
       } catch (error) {
-        alert(error);
+        if (typeof error === "string") {
+          alert(error);
+        } else {
+          const [position, field] = error.path.split(".");
+          alert(
+            `File validation error, bad field "${field}" at position ${position} in the file: ${error.message}`
+          );
+        }
       } finally {
         setUploadedPercent(0);
       }
@@ -112,9 +119,11 @@ const OrderConnector = ({
         >
           <Add />
         </Fab>
-        <Fab color="secondary" aria-label="download">
-          <CloudDownload />
-        </Fab>
+        <a href={`${process.env.REACT_APP_SERVER_URL}/order/statistic`}>
+          <Fab color="secondary" aria-label="download">
+            <CloudDownload />
+          </Fab>
+        </a>
       </div>
     </Fragment>
   );
@@ -140,7 +149,4 @@ const mpaDispatchToProps = (dispatch: any) => ({
   getTotalCount: () => dispatch(getOrdersTotalCount())
 });
 
-export default connect(
-  mapStateToProps,
-  mpaDispatchToProps
-)(OrderConnector);
+export default connect(mapStateToProps, mpaDispatchToProps)(OrderConnector);
