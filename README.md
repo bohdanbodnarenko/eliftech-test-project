@@ -23,7 +23,7 @@ Is located in front-end/ folder and it's a basic react app with Redux and simple
 
 ### `yarn start` in front-end/ dir
 
-Starts fron-end in dev mode
+Starts front-end in dev mode
 
 ## .env files
 
