@@ -62,4 +62,15 @@ describe('Order routes', () => {
                 done();
             });
     });
+    it('should return a csv file with statistic', async done => {
+        request
+            .get('/order/statistic')
+            .expect(200)
+            .end((err, res: Response) => {
+                if (err) done(err);
+                expect(res.header['content-type']).toBe('text/csv');
+                expect(res.header['content-disposition']).toContain('attachment; filename');
+                done();
+            });
+    });
 });
